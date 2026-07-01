@@ -1,0 +1,18 @@
+parameters:
+    app.upload_directory: '%kernel.project_dir%/public/uploads/articles'
+
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    App\:
+        resource: '../src/'
+        exclude:
+            - '../src/DependencyInjection/'
+            - '../src/Entity/'
+            - '../src/Kernel.php'
+
+    App\Service\FileUploadService:
+        arguments:
+            $uploadDirectory: '%app.upload_directory%'

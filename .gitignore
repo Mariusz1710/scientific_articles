@@ -1,0 +1,11 @@
+/vendor/
+/var/
+/.env.local
+/.env.local.php
+/.env.*.local
+/public/uploads/articles/*
+!/public/uploads/articles/.gitkeep
+/composer.lock
+.DS_Store
+/.idea/
+/.vscode/

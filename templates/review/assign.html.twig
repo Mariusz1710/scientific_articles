@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+{% block title %}Przypisz recenzenta{% endblock %}
+{% block body %}
+    <div class="card">
+        <h1>Przypisz recenzenta: {{ article.title }}</h1>
+        <form method="post">
+            <label>Recenzent</label>
+            <select name="reviewer" required>
+                {% for reviewer in reviewers %}
+                    <option value="{{ reviewer.id }}">{{ reviewer.fullName }}</option>
+                {% endfor %}
+            </select>
+            <p style="margin-top:1rem;"><button class="btn" type="submit">Przypisz</button></p>
+        </form>
+    </div>
+{% endblock %}

@@ -1,0 +1,40 @@
+{
+  "title": "System zgłaszania artykułów naukowych",
+  "uid": "article-system-overview",
+  "timezone": "browser",
+  "schemaVersion": 39,
+  "version": 1,
+  "refresh": "30s",
+  "panels": [
+    {
+      "type": "stat",
+      "title": "Aplikacja aktywna",
+      "gridPos": { "h": 4, "w": 4, "x": 0, "y": 0 },
+      "targets": [{ "expr": "app_up", "refId": "A" }]
+    },
+    {
+      "type": "piechart",
+      "title": "Artykuły wg statusu",
+      "gridPos": { "h": 8, "w": 10, "x": 4, "y": 0 },
+      "targets": [{ "expr": "articles_total", "legendFormat": "{{status}}", "refId": "A" }]
+    },
+    {
+      "type": "stat",
+      "title": "Wszystkie recenzje",
+      "gridPos": { "h": 4, "w": 4, "x": 14, "y": 0 },
+      "targets": [{ "expr": "reviews_total", "refId": "A" }]
+    },
+    {
+      "type": "stat",
+      "title": "Wykonane recenzje",
+      "gridPos": { "h": 4, "w": 4, "x": 18, "y": 0 },
+      "targets": [{ "expr": "reviews_submitted_total", "refId": "A" }]
+    },
+    {
+      "type": "graph",
+      "title": "Liczba artykułów wg statusu w czasie",
+      "gridPos": { "h": 8, "w": 24, "x": 0, "y": 8 },
+      "targets": [{ "expr": "articles_total", "legendFormat": "{{status}}", "refId": "A" }]
+    }
+  ]
+}

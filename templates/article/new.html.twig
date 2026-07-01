@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+{% block title %}Nowe zgłoszenie{% endblock %}
+{% block body %}
+    <div class="card">
+        <h1>Nowe zgłoszenie artykułu</h1>
+        {{ form_start(form, {attr: {enctype: 'multipart/form-data'}}) }}
+            {{ form_row(form.title) }}
+            {{ form_row(form.authors) }}
+            {{ form_row(form.abstract) }}
+            {{ form_row(form.keywords) }}
+            {{ form_row(form.category) }}
+            {{ form_row(form.file) }}
+            <p style="margin-top:1rem;"><button class="btn" type="submit">Zapisz jako wersję roboczą</button></p>
+        {{ form_end(form) }}
+    </div>
+{% endblock %}

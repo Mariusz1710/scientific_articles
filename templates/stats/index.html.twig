@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+{% block title %}Statystyki{% endblock %}
+{% block body %}
+    <div class="card">
+        <h1>Statystyki systemu</h1>
+        <p><strong>Łączna liczba artykułów:</strong> {{ totalArticles }}</p>
+        <p><strong>Łączna liczba recenzji:</strong> {{ totalReviews }} (wykonanych: {{ submittedReviews }})</p>
+
+        <h2>Artykuły wg statusu</h2>
+        <table>
+            <thead><tr><th>Status</th><th>Liczba</th></tr></thead>
+            <tbody>
+            {% for status, count in byStatus %}
+                <tr><td>{{ status }}</td><td>{{ count }}</td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        <p style="margin-top:1rem;">Dane w formacie JSON: <a href="{{ path('app_stats_json') }}">{{ path('app_stats_json') }}</a></p>
+        <p>Metryki Prometheus: <a href="{{ path('app_metrics') }}">/metrics</a></p>
+    </div>
+{% endblock %}

@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+{% block title %}Recenzja{% endblock %}
+{% block body %}
+    <div class="card">
+        <h1>Recenzja: {{ review.article.title }}</h1>
+        <p><strong>Streszczenie:</strong> {{ review.article.abstract }}</p>
+        {% if review.article.currentFilePath %}
+            <p><a class="btn secondary" href="/{{ review.article.currentFilePath }}" target="_blank">Pobierz plik artykułu</a></p>
+        {% endif %}
+
+        {% if form %}
+            {{ form_start(form) }}
+                {{ form_row(form.decision) }}
+                {{ form_row(form.score) }}
+                {{ form_row(form.comments) }}
+                <p style="margin-top:1rem;"><button class="btn" type="submit">Zapisz recenzję</button></p>
+            {{ form_end(form) }}
+        {% else %}
+            <div class="card">
+                <p><strong>Decyzja:</strong> {{ review.decision.label }}</p>
+                <p><strong>Ocena:</strong> {{ review.score }}/10</p>
+                <p><strong>Komentarz:</strong> {{ review.comments }}</p>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

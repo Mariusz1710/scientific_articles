@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+{% block title %}Panel redakcji{% endblock %}
+{% block body %}
+    <div class="card">
+        <h1>Artykuły oczekujące na decyzję o publikacji</h1>
+        <p>
+            <a class="btn secondary" href="{{ path('app_export_csv') }}">Eksport CSV (wszystkie)</a>
+            <a class="btn secondary" href="{{ path('app_export_pdf') }}">Eksport PDF (wszystkie)</a>
+        </p>
+        {% if articles|length == 0 %}
+            <p>Brak artykułów oczekujących na decyzję.</p>
+        {% else %}
+            <table>
+                <thead><tr><th>Tytuł</th><th>Autorzy</th><th>Status</th><th></th></tr></thead>
+                <tbody>
+                {% for article in articles %}
+                    <tr>
+                        <td><a href="{{ path('app_article_show', {id: article.id}) }}">{{ article.title }}</a></td>
+                        <td>{{ article.authors }}</td>
+                        <td><span class="status">{{ article.status.label }}</span></td>
+                        <td>
+                            <form method="post" action="{{ path('app_publication_approve', {id: article.id}) }}">
+                                <button class="btn" type="submit">Zatwierdź do publikacji</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+    </div>
+{% endblock %}

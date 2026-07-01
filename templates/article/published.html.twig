@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+{% block title %}Opublikowane artykuły{% endblock %}
+{% block body %}
+    <div class="card">
+        <h1>Opublikowane artykuły</h1>
+        {% if articles|length == 0 %}
+            <p>Brak opublikowanych artykułów.</p>
+        {% else %}
+            <table>
+                <thead><tr><th>Tytuł</th><th>Autorzy</th><th>Dział</th><th>Data publikacji</th></tr></thead>
+                <tbody>
+                {% for article in articles %}
+                    <tr>
+                        <td>
+                            {% if app.user %}
+                                <a href="{{ path('app_article_show', {id: article.id}) }}">{{ article.title }}</a>
+                            {% else %}
+                                {{ article.title }}
+                            {% endif %}
+                        </td>
+                        <td>{{ article.authors }}</td>
+                        <td>{{ article.category.name }}</td>
+                        <td>{{ article.publishedAt|date('Y-m-d') }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+    </div>
+{% endblock %}

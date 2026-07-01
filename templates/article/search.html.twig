@@ -1,0 +1,47 @@
+{% extends 'base.html.twig' %}
+{% block title %}Wyszukiwanie{% endblock %}
+{% block body %}
+    <div class="card">
+        <h1>Wyszukaj artykuły</h1>
+        <form method="get">
+            <label>Tytuł</label>
+            <input type="text" name="title" value="{{ criteria.title }}">
+            <label>Autorzy</label>
+            <input type="text" name="authors" value="{{ criteria.authors }}">
+            <label>Słowa kluczowe</label>
+            <input type="text" name="keywords" value="{{ criteria.keywords }}">
+            <label>Status</label>
+            <select name="status">
+                <option value="">-- dowolny --</option>
+                {% for status in statuses %}
+                    <option value="{{ status.value }}" {{ criteria.status == status.value ? 'selected' }}>{{ status.label }}</option>
+                {% endfor %}
+            </select>
+            <label>Dział naukowy</label>
+            <select name="category">
+                <option value="">-- dowolny --</option>
+                {% for category in categories %}
+                    <option value="{{ category.id }}" {{ criteria.category == category.id ? 'selected' }}>{{ category.name }}</option>
+                {% endfor %}
+            </select>
+            <p style="margin-top:1rem;"><button class="btn" type="submit">Szukaj</button></p>
+        </form>
+    </div>
+
+    {% if articles|length > 0 %}
+        <div class="card">
+            <table>
+                <thead><tr><th>Tytuł</th><th>Autorzy</th><th>Status</th></tr></thead>
+                <tbody>
+                {% for article in articles %}
+                    <tr>
+                        <td><a href="{{ path('app_article_show', {id: article.id}) }}">{{ article.title }}</a></td>
+                        <td>{{ article.authors }}</td>
+                        <td><span class="status">{{ article.status.label }}</span></td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% endif %}
+{% endblock %}

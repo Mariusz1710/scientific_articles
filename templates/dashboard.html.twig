@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+{% block title %}Pulpit{% endblock %}
+{% block body %}
+        <div class="card">
+        <h1>Witaj, {{ app.user.fullName }}</h1>
+    </div>
+
+    <div class="card">
+        <h2>Powiadomienia</h2>
+        {% if notifications|length == 0 %}
+            <p>Brak powiadomień.</p>
+        {% else %}
+            <table>
+                <thead><tr><th>Treść</th><th>Data</th><th></th></tr></thead>
+                <tbody>
+                {% for n in notifications %}
+                    <tr style="{{ n.read ? 'opacity:.6' : 'font-weight:600' }}">
+                        <td>
+                            {% if n.relatedArticle %}
+                                <a href="{{ path('app_article_show', {id: n.relatedArticle.id}) }}">{{ n.message }}</a>
+                            {% else %}
+                                {{ n.message }}
+                            {% endif %}
+                        </td>
+                        <td>{{ n.createdAt|date('Y-m-d H:i') }}</td>
+                        <td>
+                            {% if not n.read %}
+                                <form method="post" action="{{ path('app_notification_read', {id: n.id}) }}">
+                                    <button class="btn secondary" type="submit">Oznacz jako przeczytane</button>
+                                </form>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+    </div>
+{% endblock %}

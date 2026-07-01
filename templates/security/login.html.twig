@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+{% block title %}Logowanie{% endblock %}
+{% block body %}
+    <div class="card">
+        <h1>Logowanie</h1>
+
+        {% if error %}
+            <div class="flash error">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+        {% endif %}
+
+        <form method="post">
+            <label for="username">Adres e-mail</label>
+            <input type="email" name="_username" id="username" value="{{ last_username }}" required autofocus>
+
+            <label for="password">Hasło</label>
+            <input type="password" name="_password" id="password" required>
+
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+            <p style="margin-top:1rem;">
+                <button class="btn" type="submit">Zaloguj się</button>
+            </p>
+        </form>
+
+        <p>Nie masz konta? <a href="{{ path('app_register') }}">Zarejestruj się</a></p>
+    </div>
+{% endblock %}

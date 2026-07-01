@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+{% block title %}Moje recenzje{% endblock %}
+{% block body %}
+    <div class="card">
+        <h1>Przypisane recenzje</h1>
+        {% if reviews|length == 0 %}
+            <p>Brak przypisanych recenzji.</p>
+        {% else %}
+            <table>
+                <thead><tr><th>Artykuł</th><th>Status recenzji</th><th></th></tr></thead>
+                <tbody>
+                {% for review in reviews %}
+                    <tr>
+                        <td>{{ review.article.title }}</td>
+                        <td>{{ review.submitted ? review.decision.label : 'Do wykonania' }}</td>
+                        <td><a class="btn secondary" href="{{ path('app_review_show', {id: review.id}) }}">Otwórz</a></td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+    </div>
+{% endblock %}

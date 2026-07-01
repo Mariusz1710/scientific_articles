@@ -1,0 +1,68 @@
+{% extends 'base.html.twig' %}
+{% block title %}{{ article.title }}{% endblock %}
+{% block body %}
+    <div class="card">
+        <h1>{{ article.title }}</h1>
+        <p><span class="status">{{ article.status.label }}</span></p>
+        <p><strong>Autorzy:</strong> {{ article.authors }}</p>
+        <p><strong>Dział naukowy:</strong> {{ article.category.name }}</p>
+        <p><strong>Słowa kluczowe:</strong> {{ article.keywords }}</p>
+        <h3>Streszczenie</h3>
+        <p>{{ article.abstract|nl2br }}</p>
+
+        {% if article.currentFilePath %}
+            <p><a class="btn secondary" href="/{{ article.currentFilePath }}" target="_blank">Pobierz bieżący plik ({{ article.currentFileFormat.value }})</a></p>
+        {% endif %}
+
+        {% if article.submitter == app.user and article.editable %}
+            <a class="btn" href="{{ path('app_article_edit', {id: article.id}) }}">Edytuj</a>
+            <form style="display:inline" method="post" action="{{ path('app_article_submit', {id: article.id}) }}">
+                <button class="btn" type="submit">Prześlij do recenzji</button>
+            </form>
+        {% endif %}
+
+        {% if is_granted('ROLE_EDITOR') %}
+            <a class="btn secondary" href="{{ path('app_article_assign_reviewer', {id: article.id}) }}">Przypisz recenzenta</a>
+        {% endif %}
+
+        {% if article.status.value == 'published' %}
+            <a class="btn secondary" href="{{ path('app_publication_print', {id: article.id}) }}">Wersja do druku (PDF)</a>
+        {% endif %}
+    </div>
+
+    {% if article.versions|length > 0 %}
+        <div class="card">
+            <h2>Historia wersji plików</h2>
+            <table>
+                <thead><tr><th>Plik</th><th>Format</th><th>Data</th></tr></thead>
+                <tbody>
+                {% for v in article.versions %}
+                    <tr>
+                        <td><a href="/{{ v.filePath }}" target="_blank">{{ v.originalFileName }}</a></td>
+                        <td>{{ v.format.value }}</td>
+                        <td>{{ v.uploadedAt|date('Y-m-d H:i') }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% endif %}
+
+    {% if article.reviews|length > 0 and (is_granted('ROLE_REVIEWER') or article.submitter == app.user) %}
+        <div class="card">
+            <h2>Recenzje</h2>
+            <table>
+                <thead><tr><th>Recenzent</th><th>Decyzja</th><th>Ocena</th></tr></thead>
+                <tbody>
+                {% for review in article.reviews %}
+                    <tr>
+                        <td>{{ review.reviewer.fullName }}</td>
+                        <td>{{ review.submitted ? review.decision.label : 'Oczekująca' }}</td>
+                        <td>{{ review.score ?? '-' }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% endif %}
+{% endblock %}

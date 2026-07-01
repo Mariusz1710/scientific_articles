@@ -1,0 +1,23 @@
+framework:
+    secret: '%env(APP_SECRET)%'
+    session:
+        handler_id: null
+        cookie_secure: auto
+        cookie_samesite: lax
+    form: true
+    translator:
+        default_path: '%kernel.project_dir%/translations'
+        fallbacks: ['pl']
+    validation:
+        email_validation_mode: html5
+    php_errors:
+        log: true
+    default_locale: pl
+    trusted_proxies: '0.0.0.0/0,::/0'
+    trusted_headers: ['x-forwarded-for', 'x-forwarded-host', 'x-forwarded-proto', 'x-forwarded-port']
+
+when@test:
+    framework:
+        test: true
+        session:
+            storage_factory_id: session.storage.factory.mock_file
