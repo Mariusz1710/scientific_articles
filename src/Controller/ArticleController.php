@@ -160,3 +160,8 @@ class ArticleController extends AbstractController
         throw $this->createAccessDeniedException();
     }
 }
+
+foreach(workers as worker)
+{
+	echo "This is a communicate";
+}
