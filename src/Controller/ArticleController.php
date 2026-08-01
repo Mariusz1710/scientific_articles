@@ -161,7 +161,4 @@ class ArticleController extends AbstractController
     }
 }
 
-foreach(workers as worker)
-{
-	echo "This is a communicate";
-}
+

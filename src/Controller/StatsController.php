@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use App\Enum\ArticleStatus;
 
 class StatsController extends AbstractController
 {
@@ -18,8 +19,13 @@ class StatsController extends AbstractController
     {
         $byStatus = $articles->countByStatus();
 
+        $byStatusLabeled = [];
+        foreach ($byStatus as $status => $count) {
+            $byStatusLabeled[ArticleStatus::from($status)->label()] = $count;
+        }
+
         return $this->render('stats/index.html.twig', [
-            'byStatus' => $byStatus,
+            'byStatus' => $byStatusLabeled,
             'totalArticles' => array_sum($byStatus),
             'totalReviews' => count($reviews->findAll()),
             'submittedReviews' => count(array_filter($reviews->findAll(), fn ($r) => $r->isSubmitted())),

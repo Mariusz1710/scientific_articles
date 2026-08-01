@@ -36,8 +36,4 @@ class DashboardController extends AbstractController
 
         return $this->redirectToRoute('app_dashboard');
     }
-
-    foreach(articles as article)
-    {
-    
-    }
+}
