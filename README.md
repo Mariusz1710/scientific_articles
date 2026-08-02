@@ -2,7 +2,7 @@
 
 Aplikacja webowa do zgłaszania, recenzowania i publikowania artykułów naukowych,
 zrealizowana w Symfony (backend + Twig), PostgreSQL, Docker, PHPUnit i
-monitoringiem Prometheus/Grafana — zgodnie z wymaganiami projektu JEE.
+monitoringiem Prometheus/Grafana — zgodnie z wymaganiami projektu.
 
 ## 1. Architektura
 
@@ -38,12 +38,11 @@ monitoringiem Prometheus/Grafana — zgodnie z wymaganiami projektu JEE.
 | Wymaganie | Realizacja |
 |---|---|
 | Logowanie/rejestracja | `SecurityController`, `RegistrationController`, `security.yaml` (form login + hasła hashowane `auto`) |
-| Logowanie kontem uczelnianym | `src/Security/CasAuthenticator.php` — patrz sekcja 3 (research) |
 | Zgłaszanie artykułów (.tex/.pdf/.docx) | `ArticleController`, `FileUploadService`, `ArticleType` |
-| Edycja przed przesłaniem | `Article::isEditable()` — edycja dozwolona tylko w statusie `draft` |
+| Edycja przed przesłaniem | `Article::isEditable()` — edycja dozwolona tylko w statusie `wersja robocza` |
 | Przypisywanie recenzentów | `ReviewController::assignReviewer()` (rola `ROLE_EDITOR`) |
 | Recenzje i oceny | `Review`, `ReviewFormType`, `ReviewController::show()` |
-| Statusy artykułów | `App\Enum\ArticleStatus` (draft, submitted, in_review, accepted, rejected, published) |
+| Statusy artykułów | `App\Enum\ArticleStatus` (wersja robocza, zgłoszony, w recenzji, zaakceptowany, odrzucony, opublikowany) |
 | Powiadomienia | `Notification`, `NotificationService`, wyświetlane na pulpicie (`dashboard.html.twig`) |
 | Zatwierdzanie do publikacji | `PublicationController` (rola `ROLE_EDITOR`, tzw. "opiekun") |
 | Wersja do druku PDF | `PdfExportService` (biblioteka mPDF) |
@@ -56,42 +55,10 @@ monitoringiem Prometheus/Grafana — zgodnie z wymaganiami projektu JEE.
 `ROLE_AUTHOR` (domyślna) → `ROLE_REVIEWER` → `ROLE_EDITOR` (opiekun/redakcja) → `ROLE_ADMIN`
 (hierarchia w `security.yaml` — wyższa rola dziedziczy uprawnienia niższych).
 
-## 3. Research: logowanie kontem uczelnianym
-
-Polskie uczelnie **nie mają jednego wspólnego** mechanizmu SSO. W praktyce
-funkcjonują dwa uzupełniające się rozwiązania:
-
-1. **CAS (Central Authentication Service)** — niemal każda uczelnia (zwłaszcza
-   korzystająca z systemu USOS) uruchamia własny serwer CAS, np.
-   `https://cas.<uczelnia>.edu.pl/cas`. Logowanie polega na przekierowaniu do
-   `/login?service=<url_powrotny>`, a po zalogowaniu uczelnia zwraca "ticket",
-   który aplikacja waliduje jednym zapytaniem HTTP do `/serviceValidate`.
-   To najprostszy sposób integracji z **pojedynczą** uczelnią i został
-   zaimplementowany w tym projekcie (`CasAuthenticator`).
-2. **Federacja PIONIER.Id / eduGAIN (SAML2, Shibboleth)** — ogólnopolska
-   federacja zarządzania tożsamością (https://aai.pionier.net.pl), do której
-   należy większość polskich uczelni. Pozwala **jednej usłudze** obsłużyć
-   logowanie użytkowników **dowolnej** uczelni należącej do federacji, bez
-   integrowania się z każdą z osobna — kosztem bardziej złożonej konfiguracji
-   (wymiana metadanych XML, podpisy SAML). W Symfony realizuje się to przez
-   bundle typu `hslavich/oneloginsaml-bundle` współpracujący z lokalnym
-   dostawcą usług SAML (np. `simplesamlphp`) zarejestrowanym w federacji.
-
-**Decyzja projektowa**: zaimplementowano protokół CAS jako w pełni działający
-przykład logowania uczelnianego (konfigurowalny przez zmienną środowiskową
-`UNIVERSITY_CAS_SERVERS`, obsługuje wiele uczelni jednocześnie, każda ze
-swoim serwerem CAS), z jasno opisanym punktem rozszerzenia do pełnej
-federacji SAML2/PIONIER.Id, gdyby aplikacja miała docelowo obsługiwać
-studentów/pracowników wielu uczelni bez ręcznej konfiguracji każdej z nich.
-
-Źródła: dokumentacja Polskiej Federacji Zarządzania Tożsamością PIONIER.Id
-(https://aai.pionier.net.pl), materiały szkoleniowe UMK/PCSS nt. eduGAIN,
-publiczna dokumentacja centralnych serwerów uwierzytelniania UW/UAM (CAS USOS).
-
-## 4. Uruchomienie
+## 3. Uruchomienie
 
 ```bash
-cp .env.example .env        # dostosuj sekrety/hasła jeśli potrzeba
+cp .env.example .env        # początkowa konfiguracja z wartościami domyślnymi
 docker compose build
 docker compose up -d
 ```
